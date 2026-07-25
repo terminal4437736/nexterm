@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use winit::application::ApplicationHandler;
-use winit::event::{WindowEvent, KeyEvent, MouseScrollDelta};
+use winit::event::{WindowEvent, KeyEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::ModifiersState;
 use winit::window::{Window, WindowId};
