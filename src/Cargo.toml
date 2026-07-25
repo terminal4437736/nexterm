@@ -1,0 +1,31 @@
+[package]
+name             = "nexterm"
+version.workspace   = true
+edition.workspace   = true
+authors.workspace   = true
+license.workspace   = true
+
+[[bin]]
+name = "nexterm"
+path = "main.rs"
+
+[dependencies]
+# async runtime
+tokio = { workspace = true }
+
+# window
+winit = { workspace = true }
+
+# logging
+tracing            = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# error handling
+anyhow = { workspace = true }
+
+# internal crates
+nexterm-core     = { path = "../crates/nexterm-core"     }
+nexterm-pty      = { path = "../crates/nexterm-pty"      }
+nexterm-terminal = { path = "../crates/nexterm-terminal" }
+nexterm-input    = { path = "../crates/nexterm-input"    }
+nexterm-renderer = { path = "../crates/nexterm-renderer" }

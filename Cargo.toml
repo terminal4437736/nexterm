@@ -19,7 +19,7 @@ rust-version = "1.75"
 
 [workspace.dependencies]
 tokio        = { version = "1",  features = ["full"] }
-winit        = "0.29"
+winit = "0.30"
 wgpu         = "0.19"
 portable-pty = "0.8"
 cosmic-text  = "0.11"

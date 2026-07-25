@@ -1,0 +1,21 @@
+[package]
+name    = "nexterm-renderer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio            = { workspace = true }
+wgpu             = { workspace = true }
+winit            = { workspace = true }
+cosmic-text      = { workspace = true }
+tracing          = { workspace = true }
+anyhow           = { workspace = true }
+thiserror        = { workspace = true }
+serde            = { workspace = true }
+toml             = { workspace = true }
+nexterm-core     = { path = "../nexterm-core"     }
+nexterm-terminal = { path = "../nexterm-terminal" }
+
+[dependencies.bytemuck]
+version  = "1"
+features = ["derive"]
