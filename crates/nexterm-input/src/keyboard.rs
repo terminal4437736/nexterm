@@ -13,6 +13,7 @@ pub enum KeyAction {
 }
 
 pub struct KeyHandler {
+    #[allow(dead_code)]
     keybinds:  KeybindsConfig,
     modifiers: ModifiersState,
 }
