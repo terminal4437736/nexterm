@@ -22,6 +22,8 @@ pub struct Renderer {
     pub font:      FontSystem,
     pub theme:     Theme,
     grid:          GridRenderer,
+    bg_vertex_buf: wgpu::Buffer,
+    bg_index_buf:  wgpu::Buffer,
 }
 
 impl Renderer {
@@ -65,6 +67,7 @@ impl Renderer {
                     label:             Some("nexterm_device"),
                     required_features: wgpu::Features::empty(),
                     required_limits:   wgpu::Limits::default(),
+                    
                 },
                 None,
             )
@@ -113,9 +116,9 @@ impl Renderer {
                 label:  Some("nexterm_pipeline"),
                 layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
-                    module:      &shader,
-                    entry_point: "vs_main",
-                    buffers:     &[Vertex::layout()],
+                    module:              &shader,
+                    entry_point:         "vs_main",
+                    buffers:             &[Vertex::layout()],
                 },
                 fragment: Some(wgpu::FragmentState {
                     module:      &shader,
@@ -149,6 +152,24 @@ impl Renderer {
         let theme = Theme::dark();
         let grid  = GridRenderer::new();
 
+        let bg_vertex_buf = device.create_buffer_init(
+            &wgpu::util::BufferInitDescriptor {
+                label:    Some("bg_vertex_buf"),
+                contents: &[],
+                usage:    wgpu::BufferUsages::VERTEX
+                        | wgpu::BufferUsages::COPY_DST,
+            }
+        );
+
+        let bg_index_buf = device.create_buffer_init(
+            &wgpu::util::BufferInitDescriptor {
+                label:    Some("bg_index_buf"),
+                contents: &[],
+                usage:    wgpu::BufferUsages::INDEX
+                        | wgpu::BufferUsages::COPY_DST,
+            }
+        );
+
         info!("Renderer initialized");
 
         Ok(Self {
@@ -162,6 +183,8 @@ impl Renderer {
             font,
             theme,
             grid,
+            bg_vertex_buf,
+            bg_index_buf,
         })
     }
 
@@ -187,34 +210,7 @@ impl Renderer {
             self.height,
         );
 
-        // Buffers render pass se pehle banao
-        let bg_vertex_buf = self.device.create_buffer_init(
-            &wgpu::util::BufferInitDescriptor {
-                label:    Some("bg_vertex_buf"),
-                contents: bytemuck::cast_slice(
-                    if self.grid.bg_vertices.is_empty() {
-                        &[0u8; 0]
-                    } else {
-                        bytemuck::cast_slice(&self.grid.bg_vertices)
-                    }
-                ),
-                usage:    wgpu::BufferUsages::VERTEX,
-            }
-        );
-
-        let bg_index_buf = self.device.create_buffer_init(
-            &wgpu::util::BufferInitDescriptor {
-                label:    Some("bg_index_buf"),
-                contents: bytemuck::cast_slice(
-                    if self.grid.bg_indices.is_empty() {
-                        &[0u8; 0]
-                    } else {
-                        bytemuck::cast_slice(&self.grid.bg_indices)
-                    }
-                ),
-                usage:    wgpu::BufferUsages::INDEX,
-            }
-        );
+        self.update_buffers();
 
         let output = self.surface
             .get_current_texture()
@@ -255,9 +251,9 @@ impl Renderer {
             pass.set_pipeline(&self.pipeline);
 
             if !self.grid.bg_indices.is_empty() {
-                pass.set_vertex_buffer(0, bg_vertex_buf.slice(..));
+                pass.set_vertex_buffer(0, self.bg_vertex_buf.slice(..));
                 pass.set_index_buffer(
-                    bg_index_buf.slice(..),
+                    self.bg_index_buf.slice(..),
                     wgpu::IndexFormat::Uint32,
                 );
                 pass.draw_indexed(
@@ -276,5 +272,32 @@ impl Renderer {
 
     pub fn grid_size(&self) -> (u16, u16) {
         self.font.calculate_grid_size(self.width, self.height)
+    }
+
+    fn update_buffers(&mut self) {
+        if self.grid.bg_vertices.is_empty() {
+            return;
+        }
+
+        let vertex_data = bytemuck::cast_slice(&self.grid.bg_vertices);
+        let index_data  = bytemuck::cast_slice(&self.grid.bg_indices);
+
+        self.bg_vertex_buf = self.device.create_buffer_init(
+            &wgpu::util::BufferInitDescriptor {
+                label:    Some("bg_vertex_buf"),
+                contents: vertex_data,
+                usage:    wgpu::BufferUsages::VERTEX
+                        | wgpu::BufferUsages::COPY_DST,
+            }
+        );
+
+        self.bg_index_buf = self.device.create_buffer_init(
+            &wgpu::util::BufferInitDescriptor {
+                label:    Some("bg_index_buf"),
+                contents: index_data,
+                usage:    wgpu::BufferUsages::INDEX
+                        | wgpu::BufferUsages::COPY_DST,
+            }
+        );
     }
 }
