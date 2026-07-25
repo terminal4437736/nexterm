@@ -4,7 +4,7 @@ use cosmic_text::{
 };
 use tracing::info;
 
-use crate::{RendererError, Result, RgbaColor};
+use crate::{Result, RgbaColor};
 
 #[derive(Debug, Clone, Copy)]
 pub struct CellSize {
