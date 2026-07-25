@@ -1,4 +1,4 @@
-use crate::{CellStyle, Color};
+use crate::CellStyle;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cell {
