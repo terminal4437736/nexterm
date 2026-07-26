@@ -3,7 +3,7 @@
 //! Active tab highlight hota hai
 
 use crate::theme::Theme;
-use crate::RgbaColor;
+
 
 /// Ek tab ka data
 #[derive(Debug, Clone)]
@@ -36,7 +36,7 @@ impl TabBar {
     pub fn tab_rects(
         &self,
         tabs:       &[TabInfo],
-        win_width:  u32,
+        _win_width: u32,
     ) -> Vec<TabRect> {
         let mut rects = Vec::new();
         let tab_width = 160.0f32;
@@ -74,7 +74,7 @@ impl TabBar {
         &self,
         tabs:       &[TabInfo],
         theme:      &Theme,
-        win_width:  u32,
+        win_width: u32,
         win_height: u32,
     ) -> (Vec<[f32; 2]>, Vec<[f32; 4]>, Vec<u32>) {
         let mut positions = Vec::new();

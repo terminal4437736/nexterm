@@ -7,7 +7,7 @@ use tracing::{debug, error, info};
 
 use crate::pty::{PtyHandle, TermSize};
 use crate::shell::{detect_shell, Shell};
-use crate::{PtyError, Result};
+use crate::Result;
 
 /// PTY session configuration
 #[derive(Debug, Clone)]

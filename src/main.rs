@@ -14,7 +14,7 @@ use tracing_subscriber::EnvFilter;
 use nexterm_core::{App, Config};
 use nexterm_input::keyboard::KeyHandler;
 use nexterm_input::mouse::MouseHandler;
-use nexterm_renderer::{Renderer, TabBar, TabInfo};
+use nexterm_renderer::{Renderer, TabBar};
 use nexterm_terminal::parser::TerminalParser;
 
 fn main() {
@@ -49,6 +49,7 @@ struct NexTermApp {
     mouse:     Option<MouseHandler>,
     app:       Option<App>,
     modifiers: ModifiersState,
+    #[allow(dead_code)]
     tabbar:    TabBar,
 }
 
