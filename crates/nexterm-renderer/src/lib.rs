@@ -2,11 +2,13 @@ pub mod font;
 pub mod grid;
 pub mod renderer;
 pub mod theme;
+pub mod tabbar;
 
 pub use renderer::Renderer;
 pub use theme::Theme;
 pub use font::FontSystem;
 pub use grid::GridRenderer;
+pub use tabbar::{TabBar, TabInfo};
 
 use thiserror::Error;
 

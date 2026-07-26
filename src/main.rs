@@ -14,7 +14,7 @@ use tracing_subscriber::EnvFilter;
 use nexterm_core::{App, Config};
 use nexterm_input::keyboard::KeyHandler;
 use nexterm_input::mouse::MouseHandler;
-use nexterm_renderer::Renderer;
+use nexterm_renderer::{Renderer, TabBar, TabInfo};
 use nexterm_terminal::parser::TerminalParser;
 
 fn main() {
@@ -49,6 +49,7 @@ struct NexTermApp {
     mouse:     Option<MouseHandler>,
     app:       Option<App>,
     modifiers: ModifiersState,
+    tabbar:    TabBar,
 }
 
 impl NexTermApp {
@@ -62,6 +63,7 @@ impl NexTermApp {
             mouse:     None,
             app:       None,
             modifiers: ModifiersState::default(),
+            tabbar:    TabBar::new(),
         }
     }
 }
