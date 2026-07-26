@@ -82,12 +82,15 @@ impl PtySession {
     /// Blocking resize — non-async context ke liye
     pub fn resize_blocking(&self, rows: u16, cols: u16) -> Result<()> {
         let size = TermSize::new(rows, cols);
-        match self.handle.try_lock() {
-            Ok(h)  => h.resize(size),
-            Err(_) => Err(PtyError::ResizeFailed(
-                "Could not lock PTY handle".into()
-            )),
+        for _ in 0..10 {
+            match self.handle.try_lock() {
+                Ok(h)  => return h.resize(size),
+                Err(_) => std::thread::sleep(
+                    std::time::Duration::from_millis(5)
+                ),
+            }
         }
+        Ok(())
     }
 
     /// Async resize
